@@ -1,0 +1,123 @@
+<html>
+<head>
+   <title>Blogspot Reader</title>
+   <style type="text/css">
+      #blog_content {
+         border: black solid 1px
+      }
+
+      .blog_post {
+         background-color: #cbdada;
+         padding: 20px 20px 20px 20px;
+         border: red solid 1px
+      }
+
+      .blog_title {
+         display: block;
+         font-weight: bold;
+      }
+
+      .blog_title_link {
+
+      }
+
+      .blog_content {
+         display: block;
+      }
+
+      .blog_content_read_more_link {
+
+      }
+
+      .blog_timestamp {
+      }
+
+      .blog_comments_count {
+      }
+   </style>
+   <script language="JavaScript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+   <script language="JavaScript" type="text/javascript" src="js/edu/cmu/ri/createlab/DateUtils.js"></script>
+   <script language="JavaScript" type="text/javascript" src="js/edu/cmu/ri/createlab/BlogspotReader.js"></script>
+   <script type="text/javascript">
+      var DateUtils = edu.cmu.ri.createlab.DateUtils;
+
+      $(document).ready(function()
+                        {
+                        // configure the blog reader and fetch the posts
+                        var blogReader = new edu.cmu.ri.createlab.BlogspotReader("fofsgigapan", DateUtils.createSimpleDateTimeString);
+                        blogReader.addSuccessListener(
+                              function()
+                              {
+                              // clear the current contents
+                              $("#blog_content").empty();
+                              }
+                        );
+                        blogReader.addFailureListener(
+                              function()
+                              {
+                              $("#blog_content").html("Sorry, the news is currently unavailable.");
+                              }
+                        );
+                        blogReader.addReadEventListener(displayBlogPost);
+                        blogReader.setContentTruncation(160);
+                        blogReader.read(50);
+                        });
+
+      function displayBlogPost(titleText, truncatedContent, content, truncatedSummary, summary, dateStr, permalinkUrl, numComments, commentUrl)
+         {
+         // sometimes blog content is contained in a "content" field, sometimes it's in a "summary" field.  I don't
+         // understand why, but this hack just picks one that isn't null, favoring "content".
+         var truncatedPostBody = truncatedContent;
+         var postBody = content;
+         if (summary)
+            {
+            truncatedPostBody = truncatedSummary;
+            postBody = summary;
+            }
+
+         // create the title
+         var title = null;
+         if (permalinkUrl)
+            {
+            title = '<a class="blog_title_link" href="' + permalinkUrl + '">' + titleText + '</a>';
+
+            // add a "read more" link if the truncated content is actually shorter than the original
+            if (postBody && truncatedPostBody && truncatedPostBody.length < postBody.length)
+               {
+               postBody = truncatedPostBody + '... <a class="blog_content_read_more_link" href="' + permalinkUrl + '">read more</a>';
+               }
+            }
+         else
+            {
+            title = titleText;
+            }
+
+         // create the link to the comments
+         var commentsText = 'comments (' + numComments + ')';
+         var comments = null;
+         if (commentUrl)
+            {
+            comments = '<a class="blog_comments_link" href="' + commentUrl + '">' + commentsText + '</a>';
+            }
+         else
+            {
+            comments = commentsText;
+            }
+
+         // render the content
+         $("#blog_content").append(
+               '<div class="blog_post">' +
+               '   <span class="blog_title">' + title + '</span>' +
+               '   <span class="blog_content">' + postBody + '</span>' +
+               '   <span class="blog_timestamp">' + dateStr + '</span>' +
+               '   <span class="blog_comments_count">' + comments + '</span>' +
+               '</div>');
+         }
+   </script>
+</head>
+<body>
+<div id="blog_content">
+   Loading...
+</div>
+</body>
+</html>
