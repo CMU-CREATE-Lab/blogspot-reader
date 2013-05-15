@@ -3,13 +3,13 @@
    <title>Blogspot Reader</title>
    <style type="text/css">
       #blog_content {
-         border: black solid 1px
+         border: #aaaaaa solid 1px
       }
 
       .blog_post {
-         background-color: #cbdada;
+         background-color: #eeeeee;
          padding: 20px 20px 20px 20px;
-         border: red solid 1px
+         border: #cccccc solid 1px
       }
 
       .blog_title {
@@ -18,7 +18,6 @@
       }
 
       .blog_title_link {
-
       }
 
       .blog_content {
@@ -26,7 +25,6 @@
       }
 
       .blog_content_read_more_link {
-
       }
 
       .blog_timestamp {
@@ -60,7 +58,7 @@
                         );
                         blogReader.addReadEventListener(displayBlogPost);
                         blogReader.setContentTruncation(160);
-                        blogReader.read(50);
+                        blogReader.read(7);
                         });
 
       function displayBlogPost(titleText, truncatedContent, content, truncatedSummary, summary, dateStr, permalinkUrl, numComments, commentUrl)
@@ -116,6 +114,15 @@
    </script>
 </head>
 <body>
+<h1>Blogspot Reader</h1>
+<p>
+   A simple JavaScript class for fetching and parsing Blogspot (Blogger) posts. Success, failure, and read event
+   handlers may be added and will be triggered accordingly. Supports optional truncation of blog content and can also
+   optionally be limited to only retrieve the N latest posts.
+</p>
+<p>
+   View source on this page for example usage.
+</p>
 <div id="blog_content">
    Loading...
 </div>
